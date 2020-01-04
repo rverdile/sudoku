@@ -12,7 +12,8 @@ int main()
  	sf::Color purple(82,43,71);
  	sf::Color dark_purple(58,32,51);
  	sf::Color gray(141,170,157);
- 	sf::Color white(251,245,243);
+ 	sf::Color light_gray(183,205,195);
+ 	sf::Color maroon(129,52,73);
 
 
 
@@ -28,6 +29,9 @@ int main()
 	vector <sf::Text> text_buttons(4);
 	int buttons_column;
 
+	vector <sf::RectangleShape> lines(4);
+
+
 	while(window.isOpen())
 	{
 		sf::Event event;
@@ -35,7 +39,6 @@ int main()
 		{
 			if(event.type == sf::Event::Closed)
 				window.close();
-
 		}
 
 		int index = 0; //index into tile_grid, goes up to 80.
@@ -60,6 +63,30 @@ int main()
 			column_offset = 0;
 			row_offset += 105;
 		}
+
+		//------------------LINES SEPARTING GRIDS------------------------------------------------------------------//
+		// lines[0]: vertical left, lines[1]: vertical right, lines[2]: horizontal top, lines[3]: horitzontal bottom
+		lines[0].setSize(sf::Vector2f(3,1050));
+		lines[0].setFillColor(maroon);
+		lines[0].setPosition(316,0);
+		window.draw(lines[0]);
+
+		lines[1].setSize(sf::Vector2f(3,1050));
+		lines[1].setFillColor(maroon);
+		lines[1].setPosition(631,0);
+		window.draw(lines[1]);
+
+		lines[2].setSize(sf::Vector2f(900,3));
+		lines[2].setFillColor(maroon);
+		lines[2].setPosition(0,316);
+		window.draw(lines[2]);
+
+		lines[3].setSize(sf::Vector2f(900,3));
+		lines[3].setFillColor(maroon);
+		lines[3].setPosition(0,631);
+		window.draw(lines[3]);
+
+
 		
 //---------------------------------------MOUSE POSITION STUFF FOR TILES----------------------------------------------------------------------------------------------------//
 		for(int i = 0; i < tile_grid.size(); i++)
@@ -67,7 +94,7 @@ int main()
 
 			if((tile_grid[i].getGlobalBounds()).contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //If tile is hovered over, light up tile
 			{
-				tile_grid[i].setFillColor(sf::Color::White);
+				tile_grid[i].setFillColor(light_gray);
 
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) //if num1 key is pressed while tile is hovered over, place '1' text on tile. Same for numbers below.
 				{
@@ -75,7 +102,7 @@ int main()
 					text[i].setString(" 1");
 					text[i].setPosition(tile_grid[i].getPosition());
 					text[i].setCharacterSize(80);
-					text[i].setFillColor(sf::Color::Blue);
+					text[i].setFillColor(sf::Color::Black);
 				}
 				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
 				{
@@ -83,7 +110,7 @@ int main()
 					text[i].setString(" 2");
 					text[i].setPosition(tile_grid[i].getPosition());
 					text[i].setCharacterSize(80);
-					text[i].setFillColor(sf::Color::Blue);					
+					text[i].setFillColor(sf::Color::Black);					
 				}
 
 				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
@@ -92,7 +119,7 @@ int main()
 					text[i].setString(" 3");
 					text[i].setPosition(tile_grid[i].getPosition());
 					text[i].setCharacterSize(80);
-					text[i].setFillColor(sf::Color::Blue);
+					text[i].setFillColor(sf::Color::Black);
 				}
 
 				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
@@ -101,7 +128,7 @@ int main()
 					text[i].setString(" 4");
 					text[i].setPosition(tile_grid[i].getPosition());
 					text[i].setCharacterSize(80);
-					text[i].setFillColor(sf::Color::Blue);
+					text[i].setFillColor(sf::Color::Black);
 				}
 
 				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
@@ -110,7 +137,7 @@ int main()
 					text[i].setString(" 5");
 					text[i].setPosition(tile_grid[i].getPosition());
 					text[i].setCharacterSize(80);
-					text[i].setFillColor(sf::Color::Blue);					
+					text[i].setFillColor(sf::Color::Black);					
 				}
 
 				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
@@ -119,7 +146,7 @@ int main()
 					text[i].setString(" 6");
 					text[i].setPosition(tile_grid[i].getPosition());
 					text[i].setCharacterSize(80);
-					text[i].setFillColor(sf::Color::Blue);
+					text[i].setFillColor(sf::Color::Black);
 				}
 
 				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num7))
@@ -128,7 +155,7 @@ int main()
 					text[i].setString(" 7");
 					text[i].setPosition(tile_grid[i].getPosition());
 					text[i].setCharacterSize(80);
-					text[i].setFillColor(sf::Color::Blue);
+					text[i].setFillColor(sf::Color::Black);
 				}
 
 				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num8))
@@ -137,7 +164,7 @@ int main()
 					text[i].setString(" 8");
 					text[i].setPosition(tile_grid[i].getPosition());
 					text[i].setCharacterSize(80);
-					text[i].setFillColor(sf::Color::Blue);
+					text[i].setFillColor(sf::Color::Black);
 				}
 
 				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num9))
@@ -146,7 +173,7 @@ int main()
 					text[i].setString(" 9");
 					text[i].setPosition(tile_grid[i].getPosition());
 					text[i].setCharacterSize(80);
-					text[i].setFillColor(sf::Color::Blue);
+					text[i].setFillColor(sf::Color::Black);
 				}
 			}
 
@@ -186,7 +213,7 @@ int main()
 
 			if((buttons[i].getGlobalBounds()).contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) 
 			{
-				buttons[i].setFillColor(white);
+				buttons[i].setFillColor(light_gray);
 			}
 
 			else
@@ -199,9 +226,43 @@ int main()
 		//-----------BUTTONS MOUSE STUFF------------------------------//
 		for(int i = 0; i < 4; i++)
 		{
-			if((text_buttons[i].getGlobalBounds()).contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+			if((buttons[i].getGlobalBounds()).contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 			{
-				buttons[i].setFillColor(white);
+				buttons[i].setFillColor(light_gray);
+
+				if(i==0)
+				{
+					if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						cout << "Starting New Game..." << endl;
+					}
+				}
+
+				else if(i==1)
+				{
+					if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						cout << "Checking Your Answer..." << endl;
+					}
+				}
+
+				else if(i==2)
+				{
+					if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						cout << "Solving the puzzle..." << endl;
+					}
+				}
+
+				else if(i==3)
+				{
+					if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						cout << "Closing Game..." << endl;
+						window.close();
+					}
+					
+				}
 			}
 
 			else
@@ -220,7 +281,7 @@ int main()
 		window.draw(text_buttons[0]);
 
 		text_buttons[1].setFont(font);
-		text_buttons[1].setString("Reset");
+		text_buttons[1].setString("Check");
 		text_buttons[1].setPosition(310,955);
 		text_buttons[1].setCharacterSize(37);
 		text_buttons[1].setFillColor(sf::Color::Black);
