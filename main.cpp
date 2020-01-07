@@ -19,8 +19,12 @@ vector <sf::Text> displayBoard(vector <int> vectorized_grid, vector <int> vector
 string numToString(int num);
 void copyGrid(int grid[9][9], int copy[9][9]);
 bool nextRowCol(int grid[9][9], int& row_num, int& col_num);
-bool boardUpdated(int grid[9][9], int old_grid[9][9]);
 void vectorToGrid(vector <int> &vector, int grid[9][9]);
+bool checkGrid(int grid[9][9]);
+bool isValidCheck(int grid[9][9], int row_num, int col_num, int num);
+bool foundInRowCheck(int grid[9][9], int row_num, int num);
+bool foundInColumnCheck(int grid[9][9], int col_num, int num);
+bool foundinBlockCheck(int grid[9][9], int row_num, int col_num, int num);
 
 int main()
 {
@@ -68,7 +72,6 @@ int main()
 
 	vector <sf::RectangleShape> lines(4);
 
-
 	while(window.isOpen())
 	{
 		sf::Event event;
@@ -77,6 +80,30 @@ int main()
 			if(event.type == sf::Event::Closed)
 				window.close();
 		}
+
+		sf::RectangleShape pop_up;
+		pop_up.setSize(sf::Vector2f(300,300));
+		pop_up.setOutlineColor(dark_purple);
+		pop_up.setOutlineThickness(9);
+		pop_up.setPosition(326,326);
+		pop_up.setFillColor(gray);
+
+		sf::Text lose_text;
+		lose_text.setFont(font);
+		lose_text.setString("     Sorry \nthat's incorrect.");
+		lose_text.setPosition(355,415);
+		lose_text.setCharacterSize(40);
+		lose_text.setFillColor(sf::Color::Black);
+
+		sf::Text win_text;
+		win_text.setFont(font);
+		win_text.setString("You win!");
+		win_text.setPosition(400,435);
+		win_text.setCharacterSize(44);
+		win_text.setFillColor(sf::Color::Black);
+
+		bool flag = false;
+		bool flag2 = false;
 
 		int index = 0; //index into tile_grid, goes up to 80.
 		int column_offset = 0;
@@ -247,7 +274,22 @@ int main()
 				{
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
 					{
+						flag = true;
+
 						cout << "Checking Your Answer..." << endl;
+						for(int i = 0; i < vectorized_grid.size(); i++){ 		//This for loop removes any changes made to the pre-placed values done by the user.
+							if(vectorized_grid_copy[i] != 0)						//The game cannot differentiate pre-placed tiles from user-placed tiles other than
+								vectorized_grid[i] = vectorized_grid_copy[i];	//in the display.
+						}
+
+						vectorToGrid(vectorized_grid, grid);
+						if(checkGrid(grid)){
+							flag2 = true;
+							cout << "correct" << endl;
+						}
+						else
+							cout << "not correct" << endl;
+
 					}
 				}
 
@@ -256,12 +298,9 @@ int main()
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
 					{
 						cout << "Solving the puzzle..." << endl;
-						for(int i = 0; i < vectorized_grid.size(); i++){  		//This for loop removes any changes made to the pre-placed values done by the user.
-							if(vectorized_grid_copy[i] != 0)						//The game cannot differentiate pre-placed tiles from user-placed tiles other than
-								vectorized_grid[i] = vectorized_grid_copy[i];	//in the display.
-						}
+						
 
-						vectorToGrid(vectorized_grid, grid);
+						vectorToGrid(vectorized_grid_copy, grid);
 						generateSolvedBoard(grid, possible_nums);
 						vectorized_grid = gridToVector(grid);
 					}
@@ -318,6 +357,33 @@ int main()
 
 
 		displayBoard(vectorized_grid, vectorized_grid_copy, window, tile_grid, red);
+
+		if(flag){
+
+			sf::Clock clock; //starts clock
+			sf::Time elapsed = clock.getElapsedTime();
+			
+			while(elapsed.asSeconds() < 3){
+				if(flag2){
+					window.draw(pop_up);
+					window.draw(win_text);
+					window.display();
+				}
+				else{
+					window.draw(pop_up);
+					window.draw(lose_text);
+					window.display();
+				}
+
+				elapsed = clock.getElapsedTime();
+			}
+
+			flag = false;
+			flag2 = false;
+		}
+
+		
+
 		window.display();
  
 	}
@@ -577,18 +643,6 @@ bool nextRowCol(int grid[9][9], int& row_num, int& col_num){
 	return false; //reached end of board
 }
 
-bool boardUpdated(int grid[9][9], int old_grid[9][9]){
-
-	for(int i = 0; i < 9; i++){
-		for(int j = 0; j < 9; j++){
-			if(grid[i][j] != old_grid[i][j])
-				return false;
-		}
-	}
-
-	return true;
-}
-
 void vectorToGrid(vector <int> &vector, int grid[9][9]){
 
 	int count = 0;
@@ -602,3 +656,70 @@ void vectorToGrid(vector <int> &vector, int grid[9][9]){
 		}
 	}
 }
+
+bool checkGrid(int grid[9][9]){
+
+	for(int i = 0; i < 9; i++){
+		for(int j = 0; j < 9; j++){
+			if(!isValidCheck(grid, i, j, grid[i][j]))
+				return false;
+		}
+
+		
+	}
+
+	return true;
+}
+
+bool isValidCheck(int grid[9][9], int row_num, int col_num, int num){
+
+	/*Returns True if foundInRow, foundInColumn, and foundinBlock all return false, meaning the number to be placed adheres to the rules of Sudoku.*/
+
+	if(!foundInRowCheck(grid, row_num, num) && !foundInColumnCheck(grid, col_num, num) && !foundinBlockCheck(grid, row_num, col_num, num))
+		return true;
+	else
+		return false;
+}
+
+bool foundInRowCheck(int grid[9][9], int row_num, int num){
+	/*Checks if the number to be placed in the cell is contained with the number's row. If it is, returns True.*/
+
+	int count = 0;
+	for(int i=0; i < 9; i++){
+		if(num == grid[row_num][i])
+			  count++;
+	}
+
+	if(count > 1) 
+		return true; else return false;
+}
+
+bool foundInColumnCheck(int grid[9][9], int col_num, int num){
+	/*Checks if the number to be placed in the cell is contained with the number's column. If it is, returns True.*/
+
+	int count = 0;
+	for(int i=0; i < 9; i++){
+		if(num == grid[i][col_num])
+			count++;
+	}
+
+	if(count > 1) return true; else return false;
+}
+
+bool foundinBlockCheck(int grid[9][9], int row_num, int col_num, int num){
+	/*Checks if the number to be placed in the cell is contained with the number's 3x3 block. If it is, return True.*/
+
+	int block_corner_row = row_num - row_num % 3; //row number of top left corner of box
+	int block_corner_column = col_num - col_num % 3; //col number of top left corner of box
+
+	int count = 0;
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			if(grid[block_corner_row + i][block_corner_column + j] == num)
+				count++;
+		}
+	}
+
+	if(count > 1) return true; else return false;
+}	
+
