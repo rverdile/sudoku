@@ -140,12 +140,12 @@ int main()
 		lines[1].setPosition(631,0);
 		window.draw(lines[1]);
 
-		lines[2].setSize(sf::Vector2f(900,5));
+		lines[2].setSize(sf::Vector2f(1000,5));
 		lines[2].setFillColor(red);
 		lines[2].setPosition(0,316);
 		window.draw(lines[2]);
 
-		lines[3].setSize(sf::Vector2f(900,5));
+		lines[3].setSize(sf::Vector2f(1000,5));
 		lines[3].setFillColor(red);
 		lines[3].setPosition(0,631);
 		window.draw(lines[3]);
